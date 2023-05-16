@@ -153,9 +153,6 @@
     <ClCompile Include="..\..\src\main\main.c">
       <Filter>main</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\main\netplay.c">
-      <Filter>main</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\main\rom.c">
       <Filter>main</Filter>
     </ClCompile>
@@ -190,9 +187,6 @@
       <Filter>osal</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\osd\oglft_c.cpp">
-      <Filter>osd</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\osd\osd.c">
       <Filter>osd</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\backends\file_storage.c">
@@ -474,9 +468,6 @@
       <Filter>main</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\main\main.h">
-      <Filter>main</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\main\netplay.h">
       <Filter>main</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\main\rom.h">
