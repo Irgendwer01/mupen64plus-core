@@ -141,6 +141,12 @@
     <ClCompile Include="..\..\src\api\vidext.c">
       <Filter>api</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\api\event.c">
+      <Filter>api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\api\memoryexport.c">
+      <Filter>api</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\main\cheat.c">
       <Filter>main</Filter>
     </ClCompile>
@@ -763,6 +769,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\device\dd\disk.h">
       <Filter>device\dd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\api\event.h">
+      <Filter>api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\api\memoryexport.h">
+      <Filter>api</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

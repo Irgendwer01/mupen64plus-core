@@ -78,6 +78,8 @@
 #include "screenshot.h"
 #include "util.h"
 #include "netplay.h"
+#include "api/event.h"
+#include "api/memoryexport.h"
 
 #ifdef DBG
 #include "debugger/dbg_debugger.h"
@@ -897,6 +899,10 @@ int main_volume_get_muted(void)
 
 m64p_error main_reset(int do_hard_reset)
 {
+    if (gResetCallback) {
+        gResetCallback(do_hard_reset);
+    }
+
     if (do_hard_reset) {
         hard_reset_device(&g_dev);
     }
@@ -1053,10 +1059,14 @@ static void pause_loop(void)
     {
         osd_render();  // draw Paused message in case gfx.updateScreen didn't do it
         VidExt_GL_SwapBuffers();
+        InvalidateCachedCode();
         while(g_rom_pause)
         {
             SDL_Delay(10);
             main_check_inputs();
+            if (gPauseCallback) {
+                gPauseCallback();
+            }
         }
     }
 }
@@ -1068,6 +1078,10 @@ void new_vi(void)
 #if defined(PROFILE)
     timed_sections_refresh();
 #endif
+
+    if (gVICallback) {
+        gVICallback();
+    }
 
     gs_apply_cheats(&g_cheat_ctx);
 
