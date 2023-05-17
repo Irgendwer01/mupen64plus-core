@@ -85,7 +85,7 @@ EXPORT void CALL Memory_WriteF32(u32 address, f32 value) {
 
 
 EXPORT void* CALL Memory_GetBaseAddress(void) {
-    return g_dev.rdram.dram;
+    return (u8*)mem_base_u32(g_mem_base, MM_RDRAM_DRAM);
 }
 
 EXPORT void* CALL ROM_GetBaseAddress(void) {
