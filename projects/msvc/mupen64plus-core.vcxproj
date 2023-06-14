@@ -670,6 +670,7 @@
     <ClInclude Include="..\..\subprojects\minizip\zip.h" />
     <ClInclude Include="..\..\subprojects\oglft\OGLFT.h" />
     <ClInclude Include="..\..\subprojects\xxhash\xxhash.h" />
+    <ClInclude Include="..\..\src\api\modloader_common.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\src\device\r4300\mips_instructions.def" />

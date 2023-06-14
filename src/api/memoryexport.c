@@ -2,18 +2,9 @@
 #include "device/device.h"
 
 extern struct device g_dev;
-
-#define VADDR_MASK (0x0FFFFFFF)
-
-#ifdef WIN32
-#define bswap32(x) ((uint32_t)_byteswap_ulong(x))
-#define bswap64(x) ((uint64_t)_byteswap_uint64(x))
-#else
-#define bswap32(x) ((uint32_t)__builtin_bswap32(x))
-#define bswap64(x) ((uint32_t)__builtin_bswap64(x))
-#endif
-
 extern void* g_mem_base;
+
+extern u32* mem_base_u32(void* mem_base, uint32_t address);
 
 EXPORT void* CALL Memory_GetBaseAddress(void) {
     return (u8*)mem_base_u32(g_mem_base, MM_RDRAM_DRAM);

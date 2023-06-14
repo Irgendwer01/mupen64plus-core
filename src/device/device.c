@@ -225,8 +225,14 @@ void init_device(struct device* dev,
 void poweron_device(struct device* dev)
 {
     size_t i;
+    size_t dram_size = RDRAM_8MB_SIZE;
+
+    if (dev->rdram.real_dram_size < RDRAM_8MB_SIZE) {
+        dram_size = RDRAM_4MB_SIZE;
+    }
 
     poweron_rdram(&dev->rdram);
+    dev->rdram.dram_size = dram_size; // @HACK: Pretend we have 8 MB, when in reality, we have RDRAM_MAX_SIZE. This fixes bugs in games which have harcoded memory size checks
     poweron_r4300(&dev->r4300);
     poweron_rdp(&dev->dp);
     poweron_rsp(&dev->sp);

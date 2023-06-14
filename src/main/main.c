@@ -1598,6 +1598,7 @@ m64p_error main_run(void)
     uint32_t count_per_op_denom_pot;
     uint32_t emumode;
     uint32_t disable_extra_mem;
+    uint32_t force_mem_size = 0;
     int32_t si_dma_duration;
     int32_t no_compiled_jump;
     int32_t randomize_interrupt;
@@ -1650,6 +1651,21 @@ m64p_error main_run(void)
         disable_extra_mem = ROM_SETTINGS.disableextramem;
     else
         disable_extra_mem = ConfigGetParamInt(g_CoreConfig, "DisableExtraMem");
+
+    rdram_size = RDRAM_MAX_SIZE;
+    force_mem_size = ConfigGetParamInt(g_CoreConfig, "ForceMemorySize");
+    if (force_mem_size) {
+        if (force_mem_size == 1) {
+            rdram_size = RDRAM_8MB_SIZE;
+        }
+        else if (force_mem_size == 2) {
+            rdram_size = RDRAM_4MB_SIZE;
+        }
+    }
+    
+    if (disable_extra_mem) {
+        rdram_size = RDRAM_4MB_SIZE;
+    }
 
     if (count_per_op <= 0)
         count_per_op = ROM_SETTINGS.countperop;

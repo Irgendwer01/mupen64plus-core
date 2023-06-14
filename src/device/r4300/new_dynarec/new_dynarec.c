@@ -652,7 +652,7 @@ static void unneeded_registers(int istart,int iend,int r)
         {
           uu=u=0x300C0F3; // Discard at, a0-a3, t6-t9
         }
-        if(start>0x80000400&&start<0x80800000) {
+        if(start>0x80000400&&start<VADDR_MAX) {
           if(itype[i]==UJUMP&&rt1[i]==31)
           {
             //uu=u=0x30300FF0FLL; // Discard at, v0-v1, t0-t9, lo, hi
@@ -2340,7 +2340,7 @@ u_int verify_dirty(struct ll_entry * head)
   void *source;
   if((int)head->start>=0xa4000000&&(int)head->start<0xa4001000) {
     source=(void *)((uintptr_t)g_dev.sp.mem+head->start-0xa4000000);
-  }else if((int)head->start>=0x80000000&&(int)head->start<0x80800000) {
+  }else if((int)head->start>=0x80000000&&(int)head->start<VADDR_MAX) {
     source=(void *)((uintptr_t)g_dev.rdram.dram+head->start-(uintptr_t)0x80000000);
   }
   else if((signed int)head->start>=(signed int)0xC0000000) {
@@ -2472,7 +2472,7 @@ static void add_link(u_int vaddr,void *src)
 {
   u_int page=(vaddr^0x80000000)>>12;
   if(page>262143&&g_dev.r4300.cp0.tlb.LUT_r[vaddr>>12]) page=(g_dev.r4300.cp0.tlb.LUT_r[vaddr>>12]^0x80000000)>>12;
-  if(page>4095) page=2048+(page&2047);
+  if(page>(MAX_PAGE + MAX_PAGE - 1)) page=MAX_PAGE+(page&(MAX_PAGE-1));
   inv_debug("add_link: %x -> %x (%d)\n",(intptr_t)src,vaddr,page);
   (void)ll_add(jump_out+page,vaddr,src,src,0,NULL,0);
   //int ptr=get_pointer(src);
@@ -2483,7 +2483,7 @@ static struct ll_entry *get_clean(struct r4300_core* r4300,u_int vaddr,u_int fla
 {
   u_int page=(vaddr^0x80000000)>>12;
   if(page>262143&&r4300->cp0.tlb.LUT_r[vaddr>>12]) page=(r4300->cp0.tlb.LUT_r[vaddr>>12]^0x80000000)>>12;
-  if(page>2048) page=2048+(page&2047);
+  if(page>MAX_PAGE) page=MAX_PAGE+(page&(MAX_PAGE-1));
   struct ll_entry *head;
   head=jump_in[page];
   while(head!=NULL) {
@@ -2500,9 +2500,9 @@ static struct ll_entry *get_dirty(struct r4300_core* r4300,u_int vaddr,u_int fla
   u_int page=(vaddr^0x80000000)>>12;
   u_int vpage=page;
   if(page>262143&&r4300->cp0.tlb.LUT_r[vaddr>>12]) page=(r4300->cp0.tlb.LUT_r[vaddr>>12]^0x80000000)>>12;
-  if(page>2048) page=2048+(page&2047);
-  if(vpage>262143&&r4300->cp0.tlb.LUT_r[vaddr>>12]) vpage&=2047; // jump_dirty uses a hash of the virtual address instead
-  if(vpage>2048) vpage=2048+(vpage&2047);
+  if(page>MAX_PAGE) page=MAX_PAGE+(page&(MAX_PAGE-1));
+  if(vpage>262143&&r4300->cp0.tlb.LUT_r[vaddr>>12]) vpage&=(MAX_PAGE-1); // jump_dirty uses a hash of the virtual address instead
+  if(vpage>MAX_PAGE) vpage=MAX_PAGE+(vpage&(MAX_PAGE-1));
   struct ll_entry *head;
   head=jump_dirty[vpage];
   while(head!=NULL) {
@@ -2512,7 +2512,7 @@ static struct ll_entry *get_dirty(struct r4300_core* r4300,u_int vaddr,u_int fla
         if(verify_dirty(head)==0) {
           r4300->cached_interp.invalid_code[vaddr>>12]=0;
           r4300->new_dynarec_hot_state.memory_map[vaddr>>12]|=WRITE_PROTECT;
-          if(vpage<2048) {
+          if(vpage<MAX_PAGE) {
             if(r4300->cp0.tlb.LUT_r[vaddr>>12]) {
               r4300->cached_interp.invalid_code[r4300->cp0.tlb.LUT_r[vaddr>>12]>>12]=0;
               r4300->new_dynarec_hot_state.memory_map[r4300->cp0.tlb.LUT_r[vaddr>>12]>>12]|=WRITE_PROTECT;
@@ -2814,7 +2814,7 @@ void invalidate_block(u_int block)
   u_int page;
   page=block^0x80000;
   if(page>262143&&g_dev.r4300.cp0.tlb.LUT_r[block]) page=(g_dev.r4300.cp0.tlb.LUT_r[block]^0x80000000)>>12;
-  if(page>2048) page=2048+(page&2047);
+  if(page>MAX_PAGE) page=MAX_PAGE+(page&(MAX_PAGE-1));
   inv_debug("INVALIDATE: %x (%d)\n",block<<12,page);
   u_int first,last;
   first=last=page;
@@ -2823,27 +2823,27 @@ void invalidate_block(u_int block)
   u_int start,end;
 
   while(head!=NULL) {
-    if((signed int)head->vaddr>=0x80000000&&(signed int)head->vaddr<0x80800000) {
-      assert(page<2048);
+    if((signed int)head->vaddr>=0x80000000&&(signed int)head->vaddr<VADDR_MAX) {
+      assert(page<MAX_PAGE);
       start=(head->start^0x80000000)>>12;
       end=((head->start+head->length-1)^0x80000000)>>12;
-      assert(start<2048&&end<2048);
+      assert(start<MAX_PAGE&&end<MAX_PAGE);
     }
     if((signed int)head->vaddr>=(signed int)0xC0000000) {
-      assert(page<2048);
+      assert(page<MAX_PAGE);
       assert(g_dev.r4300.new_dynarec_hot_state.memory_map[head->vaddr>>12]!=(uintptr_t)-1);
       u_int paddr=head->vaddr+(g_dev.r4300.new_dynarec_hot_state.memory_map[head->vaddr>>12]<<2)-(uintptr_t)g_dev.rdram.dram;
       start=(paddr-(head->vaddr-head->start))>>12;
       end=(paddr+((head->start+head->length)-head->vaddr)-1)>>12;
-      assert(start<2048&&end<2048);
+      assert(start<MAX_PAGE&&end<MAX_PAGE);
     }
     else if((signed int)head->vaddr>=(signed int)0x80800000) {
-      assert(page>=2048);
+      assert(page>=MAX_PAGE);
       start=(head->start^0x80000000)>>12;
       end=((head->start+head->length-1)^0x80000000)>>12;
-      assert(start>=2048&&end>=2048);
-      start=2048+(start&2047);
-      end=2048+(end&2047);
+      assert(start>=MAX_PAGE&&end>=MAX_PAGE);
+      start=MAX_PAGE+(start&(MAX_PAGE-1));
+      end=MAX_PAGE+(end&(MAX_PAGE-1));
     }
 
     if((start<=page)&&(end>=page)) {
@@ -2894,8 +2894,8 @@ static void invalidate_all_pages(void)
   for(page=0;page<1048576;page++)
   {
     if(!g_dev.r4300.cached_interp.invalid_code[page]) {
-      restore_candidate[(page&2047)>>3]|=1<<(page&7);
-      restore_candidate[((page&2047)>>3)+256]|=1<<(page&7);
+      restore_candidate[(page&(MAX_PAGE-1))>>3]|=1<<(page&7);
+      restore_candidate[((page&(MAX_PAGE-1))>>3)+256]|=1<<(page&7);
     }
   }
   #if NEW_DYNAREC >= NEW_DYNAREC_ARM
@@ -2958,7 +2958,7 @@ void clean_blocks(u_int page)
           u_int i,j;
           u_int inv=0;
           u_int start,end;
-          if((signed int)head->vaddr>=0x80000000&&(signed int)head->vaddr<0x80800000) {
+          if((signed int)head->vaddr>=0x80000000&&(signed int)head->vaddr<VADDR_MAX) {
             start=head->start>>12;
             end=(head->start+head->length-1)>>12;
             for(i=start;i<=end;i++) {
@@ -2983,7 +2983,7 @@ void clean_blocks(u_int page)
           if(!inv) {
             if((((uintptr_t)head->clean_addr-(uintptr_t)out)<<(32-TARGET_SIZE_2))>0x60000000+(MAX_OUTPUT_BLOCK_SIZE<<(32-TARGET_SIZE_2))) {
               u_int ppage=page;
-              if(page<2048&&g_dev.r4300.cp0.tlb.LUT_r[head->vaddr>>12]) ppage=(g_dev.r4300.cp0.tlb.LUT_r[head->vaddr>>12]^0x80000000)>>12;
+              if(page<MAX_PAGE&&g_dev.r4300.cp0.tlb.LUT_r[head->vaddr>>12]) ppage=(g_dev.r4300.cp0.tlb.LUT_r[head->vaddr>>12]^0x80000000)>>12;
               inv_debug("INV: Restored %x (%x/%x)\n",head->vaddr, (intptr_t)head->addr, (intptr_t)head->clean_addr);
               //DebugMessage(M64MSG_VERBOSE, "page=%x, addr=%x",page,head->vaddr);
               //assert(head->vaddr>>12==(page|0x80000));
@@ -4323,7 +4323,7 @@ static void address_generation(int i,struct regstat *i_regs,signed char entry[])
               // Stores to memory go thru the mapper to detect self-modifying
               // code, loads don't.
               if((unsigned int)(constmap[i][rs]+offset)>=0xC0000000 ||
-                 (unsigned int)(constmap[i][rs]+offset)<0x80800000 )
+                 (unsigned int)(constmap[i][rs]+offset)<VADDR_MAX )
                 generate_map_const(constmap[i][rs]+offset,rm);
             }else{
               if((signed int)(constmap[i][rs]+offset)>=(signed int)0xC0000000)
@@ -4355,7 +4355,7 @@ static void address_generation(int i,struct regstat *i_regs,signed char entry[])
           // on arm address generation is always required
           // When LB/LBU/LH/LHU/LW/LWU/LD/LWC1/LDC1 loading from rdram, add rdram address to load address to avoid loading ROREG
           // ROREG only required for SDL/SDR/SB/SH/SW/SD/SWC1/SDC1 and when not loading from rdram
-          if(load&&(signed int)constmap[i][rs]+offset<(signed int)0x80800000)
+          if(load&&(signed int)constmap[i][rs]+offset<(signed int)VADDR_MAX)
             emit_movimm(constmap[i][rs]+offset+(intptr_t)g_dev.rdram.dram-(intptr_t)0x80000000,ra);
           else
           #endif
@@ -4391,7 +4391,7 @@ static void address_generation(int i,struct regstat *i_regs,signed char entry[])
           // Stores to memory go thru the mapper to detect self-modifying
           // code, loads don't.
           if((unsigned int)(constmap[i+1][rs]+offset)>=0xC0000000 ||
-             (unsigned int)(constmap[i+1][rs]+offset)<0x80800000 )
+             (unsigned int)(constmap[i+1][rs]+offset)<VADDR_MAX )
             generate_map_const(constmap[i+1][rs]+offset,ra);
         }else{
           if((signed int)(constmap[i+1][rs]+offset)>=(signed int)0xC0000000)
@@ -4426,7 +4426,7 @@ static void address_generation(int i,struct regstat *i_regs,signed char entry[])
         if(!load||(using_tlb&&((signed int)constmap[i+1][rs]+offset)>=(signed int)0xC0000000))
         #endif
         #if defined(RAM_OFFSET) && !defined(NATIVE_64)
-        if(load&&(signed int)constmap[i+1][rs]+offset<(signed int)0x80800000)
+        if(load&&(signed int)constmap[i+1][rs]+offset<(signed int)VADDR_MAX)
           emit_movimm(constmap[i+1][rs]+offset+(intptr_t)g_dev.rdram.dram-(intptr_t)0x80000000,ra);
         else
         #endif
@@ -6119,7 +6119,7 @@ static void load_assemble(int i,struct regstat *i_regs)
   if(i_regs->regmap[HOST_CCREG]==CCREG) reglist&=~(1<<HOST_CCREG);
   if(s>=0) {
     c=(i_regs->wasconst>>s)&1;
-    memtarget=c&&((signed int)(constmap[i][s]+offset))<(signed int)0x80800000;
+    memtarget=c&&((signed int)(constmap[i][s]+offset))<(signed int)VADDR_MAX;
     if(c&&using_tlb&&((signed int)(constmap[i][s]+offset))>=(signed int)0xC0000000) memtarget=1;
   }
 
@@ -6148,7 +6148,7 @@ static void load_assemble(int i,struct regstat *i_regs)
 //#define R29_HACK 1
       #ifdef R29_HACK
       // Strmnnrmn's speed hack
-      if(rs1[i]!=29||start<0x80001000||start>=0x80800000)
+      if(rs1[i]!=29||start<0x80001000||start>=VADDR_MAX)
       #endif
       {
         emit_cmpimm(addr,0x800000);
@@ -6298,7 +6298,7 @@ static void store_assemble(int i,struct regstat *i_regs)
   offset=imm[i];
   if(s>=0) {
     c=(i_regs->wasconst>>s)&1;
-    memtarget=c&&((signed int)(constmap[i][s]+offset))<(signed int)0x80800000;
+    memtarget=c&&((signed int)(constmap[i][s]+offset))<(signed int)VADDR_MAX;
     if(c&&using_tlb&&((signed int)(constmap[i][s]+offset))>=(signed int)0xC0000000) memtarget=1;
   }
   assert(tl>=0);
@@ -6324,11 +6324,11 @@ static void store_assemble(int i,struct regstat *i_regs)
       #ifdef R29_HACK
       // Strmnnrmn's speed hack
       memtarget=1;
-      if(rs1[i]!=29||start<0x80001000||start>=0x80800000)
+      if(rs1[i]!=29||start<0x80001000||start>=VADDR_MAX)
       #endif
       emit_cmpimm(addr,0x800000);
       #ifdef R29_HACK
-      if(rs1[i]!=29||start<0x80001000||start>=0x80800000)
+      if(rs1[i]!=29||start<0x80001000||start>=VADDR_MAX)
       #endif
       {
         jaddr=(intptr_t)out;
@@ -6435,7 +6435,7 @@ static void storelr_assemble(int i,struct regstat *i_regs)
   offset=imm[i];
   if(s>=0) {
     c=(i_regs->isconst>>s)&1;
-    memtarget=c&&((signed int)(constmap[i][s]+offset))<(signed int)0x80800000;
+    memtarget=c&&((signed int)(constmap[i][s]+offset))<(signed int)VADDR_MAX;
     if(c&&using_tlb&&((signed int)(constmap[i][s]+offset))>=(signed int)0xC0000000) memtarget=1;
   }
   assert(tl>=0);
@@ -6733,7 +6733,7 @@ static void c1ls_assemble(int i,struct regstat *i_regs)
 
   if(s>=0) {
     c=(i_regs->wasconst>>s)&1;
-    memtarget=c&&((signed int)(constmap[i][s]+offset))<(signed int)0x80800000;
+    memtarget=c&&((signed int)(constmap[i][s]+offset))<(signed int)VADDR_MAX;
     if(c&&using_tlb&&((signed int)(constmap[i][s]+offset))>=(signed int)0xC0000000) memtarget=1;
   }
   if(offset||s<0||c) addr=ar;
@@ -8520,9 +8520,9 @@ static void pagespan_ds(void)
   u_int page=(0x80000000^vaddr)>>12;
   u_int vpage=page;
   if(page>262143&&g_dev.r4300.cp0.tlb.LUT_r[vaddr>>12]) page=(g_dev.r4300.cp0.tlb.LUT_r[page^0x80000]^0x80000000)>>12;
-  if(page>2048) page=2048+(page&2047);
-  if(vpage>262143&&g_dev.r4300.cp0.tlb.LUT_r[vaddr>>12]) vpage&=2047; // jump_dirty uses a hash of the virtual address instead
-  if(vpage>2048) vpage=2048+(vpage&2047);
+  if(page>MAX_PAGE) page=MAX_PAGE+(page&(MAX_PAGE-1));
+  if(vpage>262143&&g_dev.r4300.cp0.tlb.LUT_r[vaddr>>12]) vpage&=(MAX_PAGE-1); // jump_dirty uses a hash of the virtual address instead
+  if(vpage>MAX_PAGE) vpage=MAX_PAGE+(vpage&(MAX_PAGE-1));
   struct ll_entry *head=ll_add(jump_dirty+vpage,vaddr,(void *)out,NULL,start,copy,slen*4);
   dirty_entry_count++;
   do_dirty_stub_ds(head);
@@ -8720,12 +8720,10 @@ void new_dynarec_init(void)
   stop_after_jal=0;
   // TLB
   using_tlb=0;
-  for(n=0;n<524288;n++) // 0 .. 0x7FFFFFFF
-    g_dev.r4300.new_dynarec_hot_state.memory_map[n]=(uintptr_t)-1;
-  for(n=524288;n<526336;n++) // 0x80000000 .. 0x807FFFFF
+  for(n=0;n<0x80000;n++) // 0 .. 0x7FFFFFFF
+    g_dev.r4300.new_dynarec_hot_state.memory_map[n]=(uintptr_t)-1;\
+  for(n=0x80000;n<0x00FFFFFF;n++) // 0x80000000 .. 0x80FFFFFF
     g_dev.r4300.new_dynarec_hot_state.memory_map[n]=((uintptr_t)g_dev.rdram.dram-(uintptr_t)0x80000000)>>2;
-  for(n=526336;n<1048576;n++) // 0x80800000 .. 0xFFFFFFFF
-    g_dev.r4300.new_dynarec_hot_state.memory_map[n]=(uintptr_t)-1;
 
   tlb_speed_hacks();
   arch_init();
@@ -8773,9 +8771,9 @@ int new_recompile_block(int addr)
     source = (u_int *)((uintptr_t)g_dev.sp.mem+start-0xa4000000);
     pagelimit = 0xa4001000;
   }
-  else if ((int)addr >= 0x80000000 && (int)addr < 0x80800000) {
+  else if ((int)addr >= 0x80000000 && (int)addr < VADDR_MAX) {
     source = (u_int *)((uintptr_t)g_dev.rdram.dram+start-(uintptr_t)0x80000000);
-    pagelimit = 0x80800000;
+    pagelimit = VADDR_MAX;
   }
   else if ((signed int)addr >= (signed int)0xC0000000) {
     //DebugMessage(M64MSG_VERBOSE, "addr=%x mm=%x",(u_int)addr,(g_dev.r4300.new_dynarec_hot_state.memory_map[start>>12]<<2));
@@ -11745,9 +11743,9 @@ int new_recompile_block(int addr)
         u_int page=(0x80000000^vaddr)>>12;
         u_int vpage=page;
         if(page>262143&&g_dev.r4300.cp0.tlb.LUT_r[vaddr>>12]) page=(g_dev.r4300.cp0.tlb.LUT_r[page^0x80000]^0x80000000)>>12;
-        if(page>2048) page=2048+(page&2047);
-        if(vpage>262143&&g_dev.r4300.cp0.tlb.LUT_r[vaddr>>12]) vpage&=2047; // jump_dirty uses a hash of the virtual address instead
-        if(vpage>2048) vpage=2048+(vpage&2047);
+        if(page>MAX_PAGE) page=MAX_PAGE+(page&(MAX_PAGE-1));
+        if(vpage>262143&&g_dev.r4300.cp0.tlb.LUT_r[vaddr>>12]) vpage&=(MAX_PAGE-1); // jump_dirty uses a hash of the virtual address instead
+        if(vpage>MAX_PAGE) vpage=MAX_PAGE+(vpage&(MAX_PAGE-1));
         literal_pool(256);
         //if(!(is32[i]&(~unneeded_reg_upper[i])&~(1LL<<CCREG)))
         if(!requires_32bit[i])
@@ -11841,20 +11839,20 @@ int new_recompile_block(int addr)
     {
       case 0:
         // Clear jump_in and jump_dirty
-        ll_remove_matching_addrs(jump_in+(expirep&2047),base,shift);
-        ll_remove_matching_addrs(jump_dirty+(expirep&2047),base,shift);
-        ll_remove_matching_addrs(jump_in+2048+(expirep&2047),base,shift);
-        ll_remove_matching_addrs(jump_dirty+2048+(expirep&2047),base,shift);
+        ll_remove_matching_addrs(jump_in+(expirep&(MAX_PAGE-1)),base,shift);
+        ll_remove_matching_addrs(jump_dirty+(expirep&(MAX_PAGE-1)),base,shift);
+        ll_remove_matching_addrs(jump_in+MAX_PAGE+(expirep&(MAX_PAGE-1)),base,shift);
+        ll_remove_matching_addrs(jump_dirty+MAX_PAGE+(expirep&(MAX_PAGE-1)),base,shift);
         break;
       case 1:
         // Clear pointers
-        ll_kill_pointers(jump_out[expirep&2047],base,shift);
-        ll_kill_pointers(jump_out[(expirep&2047)+2048],base,shift);
+        ll_kill_pointers(jump_out[expirep&(MAX_PAGE-1)],base,shift);
+        ll_kill_pointers(jump_out[(expirep&(MAX_PAGE-1))+MAX_PAGE],base,shift);
         break;
       case 2:
         // Clear hash table
         for(i=0;i<32;i++) {
-          struct ll_entry **ht_bin=hash_table[((expirep&2047)<<5)+i];
+          struct ll_entry **ht_bin=hash_table[((expirep&(MAX_PAGE-1))<<5)+i];
           if(ht_bin[1]&&((((uintptr_t)ht_bin[1]->addr-(uintptr_t)base_addr)>>shift)==((base-(uintptr_t)base_addr)>>shift) ||
              (((uintptr_t)ht_bin[1]->addr-(uintptr_t)base_addr-MAX_OUTPUT_BLOCK_SIZE)>>shift)==((base-(uintptr_t)base_addr)>>shift))) {
             inv_debug("EXP: Remove hash %x -> %x\n",ht_bin[1]->vaddr,ht_bin[1]->addr);
@@ -11871,11 +11869,11 @@ int new_recompile_block(int addr)
       case 3:
         // Clear jump_out
         #if NEW_DYNAREC >= NEW_DYNAREC_ARM
-        if((expirep&2047)==0)
+        if((expirep&(MAX_PAGE-1))==0)
           do_clear_cache();
         #endif
-        ll_remove_matching_addrs(jump_out+(expirep&2047),base,shift);
-        ll_remove_matching_addrs(jump_out+2048+(expirep&2047),base,shift);
+        ll_remove_matching_addrs(jump_out+(expirep&(MAX_PAGE-1)),base,shift);
+        ll_remove_matching_addrs(jump_out+MAX_PAGE+(expirep&(MAX_PAGE-1)),base,shift);
         break;
     }
     expirep=(expirep+1)&65535;

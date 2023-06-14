@@ -776,6 +776,9 @@
     <ClInclude Include="..\..\src\api\memoryexport.h">
       <Filter>api</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\api\modloader_common.h">
+      <Filter>api</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\src\device\r4300\mips_instructions.def">
