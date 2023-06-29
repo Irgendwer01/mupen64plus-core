@@ -26,14 +26,7 @@
 #include <stdint.h>
 
 #include "osal/preproc.h"
-
-enum {
-    RDRAM_4MB_SIZE = 0x00400000,
-    RDRAM_8MB_SIZE = 0x00800000,
-    RDRAM_MAX_SIZE = 0x01000000,
-};
-enum { CART_ROM_MAX_SIZE = 0x4000000 };
-enum { DD_ROM_MAX_SIZE = 0x400000 };
+#include "main/memory_base.h"
 
 typedef void (*read32fn)(void*,uint32_t,uint32_t*);
 typedef void (*write32fn)(void*,uint32_t,uint32_t,uint32_t);
@@ -93,9 +86,9 @@ static osal_inline void mem_write32(const struct mem_handler* handler, uint32_t 
 
 void apply_mem_mapping(struct memory* mem, const struct mem_mapping* mapping);
 
-void* init_mem_base(void);
-void release_mem_base(void* mem_base);
-uint32_t* mem_base_u32(void* mem_base, uint32_t address);
+int init_mem_base(MemoryBase* mem_base);
+void release_mem_base(MemoryBase* mem_base);
+uint32_t* mem_base_u32(MemoryBase* mem_base, uint32_t address);
 
 void read_with_bp_checks(void* opaque, uint32_t address, uint32_t* value);
 void write_with_bp_checks(void* opaque, uint32_t address, uint32_t value, uint32_t mask);

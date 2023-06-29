@@ -30,8 +30,6 @@ struct mi_controller;
 struct rdp_core;
 struct ri_controller;
 
-enum { SP_MEM_SIZE = 0x2000 };
-
 enum
 {
     /* SP_STATUS - read */

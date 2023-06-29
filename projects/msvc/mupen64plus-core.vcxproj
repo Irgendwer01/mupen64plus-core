@@ -468,6 +468,7 @@
     <ClInclude Include="..\..\src\main\util.h" />
     <ClInclude Include="..\..\src\main\version.h" />
     <ClInclude Include="..\..\src\main\workqueue.h" />
+    <ClInclude Include="..\..\src\main\memory_base.h" />
     <ClInclude Include="..\..\src\device\memory\memory.h" />
     <ClInclude Include="..\..\src\osal\dynamiclib.h" />
     <ClInclude Include="..\..\src\osal\files.h" />

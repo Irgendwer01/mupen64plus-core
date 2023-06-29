@@ -41,7 +41,7 @@
  */
 static size_t get_modules_count(const struct rdram* rdram)
 {
-    return (rdram->dram_size) / 0x200000;
+    return RDRAM_MAX_MODULES_COUNT;
 }
 
 static uint8_t cc_value(uint32_t mode_reg)

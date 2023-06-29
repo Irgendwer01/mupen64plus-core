@@ -32,6 +32,7 @@
 #include "rcp/rsp/rsp_core.h"
 #include "rcp/si/si_controller.h"
 #include "rcp/vi/vi_controller.h"
+#include "main/memory_base.h"
 
 #define ARRAY_SIZE(x) (sizeof(x)/sizeof((x)[0]))
 
@@ -79,7 +80,7 @@ static void get_pi_dma_handler(struct cart* cart, struct dd_controller* dd, uint
 
 void init_device(struct device* dev,
     /* memory */
-    void* base,
+    MemoryBase* base,
     /* r4300 */
     unsigned int emumode,
     unsigned int count_per_op,
@@ -180,6 +181,12 @@ void init_device(struct device* dev,
     init_memory(&dev->mem, mappings, ARRAY_SIZE(mappings), base, &dbg_handler);
 
     init_rdram(&dev->rdram, mem_base_u32(base, MM_RDRAM_DRAM), dram_size, &dev->r4300);
+    if (dev->rdram.real_dram_size < RDRAM_MEMORY_8MB_SIZE) {
+        dev->rdram.dram_size = RDRAM_MEMORY_4MB_SIZE;
+    }
+    else {
+        dev->rdram.dram_size = RDRAM_MEMORY_8MB_SIZE;
+    }
 
     init_r4300(&dev->r4300, &dev->mem, &dev->mi, &dev->rdram, interrupt_handlers,
             emumode, count_per_op, count_per_op_denom_pot, no_compiled_jump, randomize_interrupt, start_address);
@@ -225,14 +232,8 @@ void init_device(struct device* dev,
 void poweron_device(struct device* dev)
 {
     size_t i;
-    size_t dram_size = RDRAM_8MB_SIZE;
-
-    if (dev->rdram.real_dram_size < RDRAM_8MB_SIZE) {
-        dram_size = RDRAM_4MB_SIZE;
-    }
 
     poweron_rdram(&dev->rdram);
-    dev->rdram.dram_size = dram_size; // @HACK: Pretend we have 8 MB, when in reality, we have RDRAM_MAX_SIZE. This fixes bugs in games which have harcoded memory size checks
     poweron_r4300(&dev->r4300);
     poweron_rdp(&dev->dp);
     poweron_rsp(&dev->sp);

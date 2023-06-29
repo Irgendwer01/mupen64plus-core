@@ -28,14 +28,11 @@
 #include "cic.h"
 
 #include "osal/preproc.h"
+#include "main/memory_base.h"
 
 struct joybus_device_interface;
 struct r4300_core;
 struct si_controller;
-
-enum { PIF_ROM_SIZE = 0x7c0 };
-enum { PIF_RAM_SIZE = 0x40 };
-enum { PIF_CHANNELS_COUNT = 5 };
 
 struct pif_channel
 {

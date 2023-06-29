@@ -29,6 +29,7 @@
 #include "main/cheat.h"
 #include "device/device.h"
 #include "osal/preproc.h"
+#include "main/memory_base.h"
 
 #if defined(__GNUC__)
 #define ATTR_FMT(fmtpos, attrpos) __attribute__ ((format (printf, fmtpos, attrpos)))
@@ -45,7 +46,7 @@ extern int g_rom_pause;
 
 extern struct cheat_ctx g_cheat_ctx;
 
-extern void* g_mem_base;
+extern MemoryBase g_mem_base;
 
 extern struct device g_dev;
 

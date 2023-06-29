@@ -2,12 +2,11 @@
 #include "device/device.h"
 
 extern struct device g_dev;
-extern void* g_mem_base;
 
-extern u32* mem_base_u32(void* mem_base, uint32_t address);
+extern u32* mem_base_u32(MemoryBase* mem_base, uint32_t address);
 
 EXPORT void* CALL Memory_GetBaseAddress(void) {
-    return (u8*)mem_base_u32(g_mem_base, MM_RDRAM_DRAM);
+    return g_mem_base.rdram;
 }
 
 EXPORT void* CALL ROM_GetBaseAddress(void) {

@@ -109,7 +109,7 @@ struct cheat_ctx g_cheat_ctx;
  * Do not use this variable directly in emulation code.
  * Initialization and DeInitialization of this variable is done at CoreStartup and CoreShutdown.
  */
-void* g_mem_base = NULL;
+MemoryBase g_mem_base = { 0 };
 
 uint32_t g_start_address = UINT32_C(0xa4000040);
 
@@ -1652,19 +1652,19 @@ m64p_error main_run(void)
     else
         disable_extra_mem = ConfigGetParamInt(g_CoreConfig, "DisableExtraMem");
 
-    rdram_size = RDRAM_MAX_SIZE;
+    rdram_size = RDRAM_MEMORY_SIZE;
     force_mem_size = ConfigGetParamInt(g_CoreConfig, "ForceMemorySize");
     if (force_mem_size) {
         if (force_mem_size == 1) {
-            rdram_size = RDRAM_8MB_SIZE;
+            rdram_size = RDRAM_MEMORY_8MB_SIZE;
         }
         else if (force_mem_size == 2) {
-            rdram_size = RDRAM_4MB_SIZE;
+            rdram_size = RDRAM_MEMORY_4MB_SIZE;
         }
     }
     
     if (disable_extra_mem) {
-        rdram_size = RDRAM_4MB_SIZE;
+        rdram_size = RDRAM_MEMORY_4MB_SIZE;
     }
 
     if (count_per_op <= 0)
@@ -1688,7 +1688,7 @@ m64p_error main_run(void)
 #if !defined(M64P_BIG_ENDIAN)
     if (g_RomWordsLittleEndian == 0)
     {
-        swap_buffer((uint8_t*)mem_base_u32(g_mem_base, MM_CART_ROM), 4, g_rom_size/4);
+        swap_buffer((uint8_t*)mem_base_u32(&g_mem_base, MM_CART_ROM), 4, g_rom_size/4);
         g_RomWordsLittleEndian = 1;
     }
 #endif
@@ -1750,7 +1750,7 @@ m64p_error main_run(void)
     if (load_dd_disk(&dd_disk, &dd_idisk))
     {
         dd_rtc_iclock = &g_iclock_ctime_plus_delta;
-        load_dd_rom((uint8_t*)mem_base_u32(g_mem_base, MM_DD_ROM), &dd_rom_size, &dd_disk.region);
+        load_dd_rom((uint8_t*)mem_base_u32(&g_mem_base, MM_DD_ROM), &dd_rom_size, &dd_disk.region);
     }
     else
     {
@@ -1927,7 +1927,7 @@ m64p_error main_run(void)
     }
 
     init_device(&g_dev,
-                g_mem_base,
+                &g_mem_base,
                 emumode,
                 count_per_op,
                 count_per_op_denom_pot,
@@ -2118,7 +2118,7 @@ m64p_error open_pif(const unsigned char* pifimage, unsigned int size)
     md5_byte_t pif_ntsc_md5[] = {0x49, 0x21, 0xD5, 0xF2, 0x16, 0x5D, 0xEE, 0x6E, 0x24, 0x96, 0xF4, 0x38, 0x8C, 0x4C, 0x81, 0xDA};
     md5_byte_t pif_pal_md5[]  = {0x2B, 0x6E, 0xEC, 0x58, 0x6F, 0xAA, 0x43, 0xF3, 0x46, 0x23, 0x33, 0xB8, 0x44, 0x83, 0x45, 0x54};
 
-    uint32_t *dst32 = mem_base_u32(g_mem_base, MM_PIF_MEM);
+    uint32_t *dst32 = mem_base_u32(&g_mem_base, MM_PIF_MEM);
     uint32_t *src32 = (uint32_t*) pifimage;
     md5_state_t state;
     md5_byte_t digest[16];

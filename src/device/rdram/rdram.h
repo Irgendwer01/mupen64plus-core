@@ -47,7 +47,7 @@ enum rdram_registers
 };
 
 /* IPL3 rdram initialization accepts up to 8 RDRAM modules */
-enum { RDRAM_MAX_MODULES_COUNT = RDRAM_MAX_SIZE / 0x200000 };
+enum { RDRAM_MAX_MODULES_COUNT = RDRAM_MEMORY_SIZE / 0x200000 };
 
 struct rdram
 {
