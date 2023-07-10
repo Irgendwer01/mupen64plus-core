@@ -89,6 +89,9 @@
 #include "lirc.h"
 #endif //WITH_LIRC
 
+#include <cimgui.h>
+#include <cimgui_backend.h>
+
 /* version number for Core config section */
 #define CONFIG_PARAM_VERSION 1.01
 
@@ -950,6 +953,28 @@ static void video_plugin_render_callback(int bScreenRedrawn)
     {
         input.renderCallback();
     }
+
+    ImGuiBackend_ImplOpenGL3_NewFrame();
+    ImGuiBackend_ImplSDL2_NewFrame();
+    ImGui_NewFrame();
+
+    ImGui_ShowDemoWindow(NULL);
+
+    if (gVICallback) {
+        gVICallback();
+    }
+
+    ImGuiIO* io = ImGui_GetIO();
+    ImGui_Render();
+    ImGuiBackend_ImplOpenGL3_RenderDrawData(ImGui_GetDrawData());
+
+    if (io->ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+        SDL_Window* backup_current_window = SDL_GL_GetCurrentWindow();
+        SDL_GLContext backup_current_context = SDL_GL_GetCurrentContext();
+        ImGui_UpdatePlatformWindows();
+        ImGui_RenderPlatformWindowsDefault();
+        SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
+    }
 }
 
 void new_frame(void)
@@ -1078,10 +1103,6 @@ void new_vi(void)
 #if defined(PROFILE)
     timed_sections_refresh();
 #endif
-
-    if (gVICallback) {
-        gVICallback();
-    }
 
     gs_apply_cheats(&g_cheat_ctx);
 
@@ -1631,6 +1652,10 @@ m64p_error main_run(void)
             break;
     }
 
+    // imgui init
+    ImGuiContext* imgui_context = ImGui_CreateContext(NULL);
+    ImGui_SetCurrentContext(imgui_context);
+
     /* Seed MPK ID gen using current time */
     uint64_t mpk_seed = !netplay_is_init() ? (uint64_t)time(NULL) : 0;
     l_mpk_idgen = xoshiro256pp_seed(mpk_seed);
@@ -1995,6 +2020,34 @@ m64p_error main_run(void)
     /* Startup message on the OSD */
     osd_new_message(OSD_MIDDLE_CENTER, "Mupen64Plus Started...");
 
+    // imgui init 2
+    ImGuiIO* io = ImGui_GetIO();
+    SDL_Window* window = SDL_GL_GetCurrentWindow();
+    SDL_GLContext gl_context = SDL_GL_GetCurrentContext();
+
+    if (window == NULL) {
+        DebugMessage(M64MSG_ERROR, "SDL Window is null!");
+    }
+    else {
+        DebugMessage(M64MSG_STATUS, "SDL Window OK!");
+    }
+
+    if (gl_context == NULL) {
+        DebugMessage(M64MSG_ERROR, "gl_context is null!");
+    }
+    else {
+        DebugMessage(M64MSG_STATUS, "gl_context OK!");
+    }
+
+    io->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+    io->ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+    io->ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // Enable Docking
+    io->ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // Enable Multi-Viewport / Platform Windows
+
+    ImGui_StyleColorsDark(NULL);
+    ImGuiBackend_ImplSDL2_InitForOpenGL(window, gl_context);
+    ImGuiBackend_ImplOpenGL3_Init("#version 330");
+
     g_EmulatorRunning = 1;
     StateChanged(M64CORE_EMU_STATE, M64EMU_RUNNING);
 
@@ -2037,6 +2090,11 @@ m64p_error main_run(void)
     input.romClosed();
     audio.romClosed();
     gfx.romClosed();
+
+    // imgui deinit
+    ImGuiBackend_ImplOpenGL3_Shutdown();
+    ImGuiBackend_ImplSDL2_Shutdown();
+    ImGui_DestroyContext(imgui_context);
 
     // clean up
     g_EmulatorRunning = 0;

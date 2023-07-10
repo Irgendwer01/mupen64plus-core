@@ -1,0 +1,4 @@
+
+[submodule "subprojects/ModLoader_ImGui"]
+	path = subprojects/ModLoader_ImGui
+	url = https://github.com/ModLoader64/ModLoader_ImGui.git

@@ -376,6 +376,15 @@
     <ClCompile Include="..\..\subprojects\minizip\unzip.c" />
     <ClCompile Include="..\..\subprojects\minizip\zip.c" />
     <ClCompile Include="..\..\subprojects\oglft\OGLFT.cpp" />
+    <ClCompile Include="..\..\subprojects\ModLoader_ImGui\cimgui.cpp" />
+    <ClCompile Include="..\..\subprojects\ModLoader_ImGui\cimgui_backend.cpp" />
+    <ClCompile Include="..\..\subprojects\ModLoader_ImGui\imgui\imgui.cpp" />
+    <ClCompile Include="..\..\subprojects\ModLoader_ImGui\imgui\imgui_demo.cpp" />
+    <ClCompile Include="..\..\subprojects\ModLoader_ImGui\imgui\imgui_draw.cpp" />
+    <ClCompile Include="..\..\subprojects\ModLoader_ImGui\imgui\imgui_tables.cpp" />
+    <ClCompile Include="..\..\subprojects\ModLoader_ImGui\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="..\..\subprojects\ModLoader_ImGui\imgui\backends\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="..\..\subprojects\ModLoader_ImGui\imgui\backends\imgui_impl_sdl2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\api\callbacks.h" />
@@ -933,8 +942,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\src;..\..\subprojects\md5;..\..\subprojects\minizip;..\..\subprojects\oglft;..\..\subprojects\xxhash;..\..\..\mupen64plus-win32-deps\SDL2-2.26.3\include;..\..\..\mupen64plus-win32-deps\zlib-1.2.13\include;..\..\..\mupen64plus-win32-deps\libpng-1.6.39\include;..\..\..\mupen64plus-win32-deps\freetype-2.13.0\include;..\..\..\mupen64plus-win32-deps\opencv-3.0.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;DYNAREC;M64P_PARALLEL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\src;..\..\subprojects\md5;..\..\subprojects\minizip;..\..\subprojects\oglft;..\..\subprojects\xxhash;..\..\subprojects\ModLoader_ImGui;..\..\subprojects\ModLoader_ImGui\imgui;..\..\subprojects\ModLoader_ImGui\imgui\backends;..\..\..\mupen64plus-win32-deps\SDL2-2.26.3\include;..\..\..\mupen64plus-win32-deps\zlib-1.2.13\include;..\..\..\mupen64plus-win32-deps\libpng-1.6.39\include;..\..\..\mupen64plus-win32-deps\freetype-2.13.0\include;..\..\..\mupen64plus-win32-deps\opencv-3.0.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>IMGUI_STATIC;CIMGUI_API=__declspec(dllexport);IMGUI_API=__declspec(dllexport);WIN32;_DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;DYNAREC;M64P_PARALLEL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
@@ -951,8 +960,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\src;..\..\subprojects\md5;..\..\subprojects\minizip;..\..\subprojects\oglft;..\..\subprojects\xxhash;..\..\..\mupen64plus-win32-deps\SDL2-2.26.3\include;..\..\..\mupen64plus-win32-deps\zlib-1.2.13\include;..\..\..\mupen64plus-win32-deps\libpng-1.6.39\include;..\..\..\mupen64plus-win32-deps\freetype-2.13.0\include;..\..\..\mupen64plus-win32-deps\opencv-3.0.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;DYNAREC;M64P_PARALLEL;__x86_64__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\src;..\..\subprojects\md5;..\..\subprojects\minizip;..\..\subprojects\oglft;..\..\subprojects\xxhash;..\..\subprojects\ModLoader_ImGui;..\..\subprojects\ModLoader_ImGui\imgui;..\..\subprojects\ModLoader_ImGui\imgui\backends;..\..\..\mupen64plus-win32-deps\SDL2-2.26.3\include;..\..\..\mupen64plus-win32-deps\zlib-1.2.13\include;..\..\..\mupen64plus-win32-deps\libpng-1.6.39\include;..\..\..\mupen64plus-win32-deps\freetype-2.13.0\include;..\..\..\mupen64plus-win32-deps\opencv-3.0.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>IMGUI_STATIC;CIMGUI_API=__declspec(dllexport);IMGUI_API=__declspec(dllexport);WIN32;_DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;DYNAREC;M64P_PARALLEL;__x86_64__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
@@ -969,8 +978,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='New_Dynarec_Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\src;..\..\subprojects\md5;..\..\subprojects\minizip;..\..\subprojects\oglft;..\..\subprojects\xxhash;..\..\..\mupen64plus-win32-deps\SDL2-2.26.3\include;..\..\..\mupen64plus-win32-deps\zlib-1.2.13\include;..\..\..\mupen64plus-win32-deps\libpng-1.6.39\include;..\..\..\mupen64plus-win32-deps\freetype-2.13.0\include;..\..\..\mupen64plus-win32-deps\opencv-3.0.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;DYNAREC;M64P_PARALLEL;NEW_DYNAREC=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\src;..\..\subprojects\md5;..\..\subprojects\minizip;..\..\subprojects\oglft;..\..\subprojects\xxhash;..\..\subprojects\ModLoader_ImGui;..\..\subprojects\ModLoader_ImGui\imgui;..\..\subprojects\ModLoader_ImGui\imgui\backends;..\..\..\mupen64plus-win32-deps\SDL2-2.26.3\include;..\..\..\mupen64plus-win32-deps\zlib-1.2.13\include;..\..\..\mupen64plus-win32-deps\libpng-1.6.39\include;..\..\..\mupen64plus-win32-deps\freetype-2.13.0\include;..\..\..\mupen64plus-win32-deps\opencv-3.0.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>IMGUI_STATIC;CIMGUI_API=__declspec(dllexport);IMGUI_API=__declspec(dllexport);WIN32;_DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;DYNAREC;M64P_PARALLEL;NEW_DYNAREC=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
@@ -987,8 +996,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='x86_New_Dynarec_Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\src;..\..\subprojects\md5;..\..\subprojects\minizip;..\..\subprojects\oglft;..\..\subprojects\xxhash;..\..\..\mupen64plus-win32-deps\SDL2-2.26.3\include;..\..\..\mupen64plus-win32-deps\zlib-1.2.13\include;..\..\..\mupen64plus-win32-deps\libpng-1.6.39\include;..\..\..\mupen64plus-win32-deps\freetype-2.13.0\include;..\..\..\mupen64plus-win32-deps\opencv-3.0.0\include;..\..\..\mupen64plus-win32-deps\capstone\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;DYNAREC;M64P_PARALLEL;NEW_DYNAREC=1;RECOMPILER_DEBUG=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\src;..\..\subprojects\md5;..\..\subprojects\minizip;..\..\subprojects\oglft;..\..\subprojects\xxhash;..\..\subprojects\ModLoader_ImGui;..\..\subprojects\ModLoader_ImGui\imgui;..\..\subprojects\ModLoader_ImGui\imgui\backends;..\..\..\mupen64plus-win32-deps\SDL2-2.26.3\include;..\..\..\mupen64plus-win32-deps\zlib-1.2.13\include;..\..\..\mupen64plus-win32-deps\libpng-1.6.39\include;..\..\..\mupen64plus-win32-deps\freetype-2.13.0\include;..\..\..\mupen64plus-win32-deps\opencv-3.0.0\include;..\..\..\mupen64plus-win32-deps\capstone\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>IMGUI_STATIC;CIMGUI_API=__declspec(dllexport);IMGUI_API=__declspec(dllexport);WIN32;_DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;DYNAREC;M64P_PARALLEL;NEW_DYNAREC=1;RECOMPILER_DEBUG=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
@@ -1005,8 +1014,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ARM_New_Dynarec_Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\src;..\..\subprojects\md5;..\..\subprojects\minizip;..\..\subprojects\oglft;..\..\subprojects\xxhash;..\..\..\mupen64plus-win32-deps\SDL2-2.26.3\include;..\..\..\mupen64plus-win32-deps\zlib-1.2.13\include;..\..\..\mupen64plus-win32-deps\libpng-1.6.39\include;..\..\..\mupen64plus-win32-deps\freetype-2.13.0\include;..\..\..\mupen64plus-win32-deps\opencv-3.0.0\include;..\..\..\mupen64plus-win32-deps\capstone\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;DYNAREC;M64P_PARALLEL;NEW_DYNAREC=1;RECOMPILER_DEBUG=3;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\src;..\..\subprojects\md5;..\..\subprojects\minizip;..\..\subprojects\oglft;..\..\subprojects\xxhash;..\..\subprojects\ModLoader_ImGui;..\..\subprojects\ModLoader_ImGui\imgui;..\..\subprojects\ModLoader_ImGui\imgui\backends;..\..\..\mupen64plus-win32-deps\SDL2-2.26.3\include;..\..\..\mupen64plus-win32-deps\zlib-1.2.13\include;..\..\..\mupen64plus-win32-deps\libpng-1.6.39\include;..\..\..\mupen64plus-win32-deps\freetype-2.13.0\include;..\..\..\mupen64plus-win32-deps\opencv-3.0.0\include;..\..\..\mupen64plus-win32-deps\capstone\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>IMGUI_STATIC;CIMGUI_API=__declspec(dllexport);IMGUI_API=__declspec(dllexport);WIN32;_DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;DYNAREC;M64P_PARALLEL;NEW_DYNAREC=1;RECOMPILER_DEBUG=3;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
@@ -1023,8 +1032,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='New_Dynarec_Debug|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\src;..\..\subprojects\md5;..\..\subprojects\minizip;..\..\subprojects\oglft;..\..\subprojects\xxhash;..\..\..\mupen64plus-win32-deps\SDL2-2.26.3\include;..\..\..\mupen64plus-win32-deps\zlib-1.2.13\include;..\..\..\mupen64plus-win32-deps\libpng-1.6.39\include;..\..\..\mupen64plus-win32-deps\freetype-2.13.0\include;..\..\..\mupen64plus-win32-deps\opencv-3.0.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;DYNAREC;M64P_PARALLEL;NEW_DYNAREC=2;__x86_64__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\src;..\..\subprojects\md5;..\..\subprojects\minizip;..\..\subprojects\oglft;..\..\subprojects\xxhash;..\..\subprojects\ModLoader_ImGui;..\..\subprojects\ModLoader_ImGui\imgui;..\..\subprojects\ModLoader_ImGui\imgui\backends;..\..\..\mupen64plus-win32-deps\SDL2-2.26.3\include;..\..\..\mupen64plus-win32-deps\zlib-1.2.13\include;..\..\..\mupen64plus-win32-deps\libpng-1.6.39\include;..\..\..\mupen64plus-win32-deps\freetype-2.13.0\include;..\..\..\mupen64plus-win32-deps\opencv-3.0.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>IMGUI_STATIC;CIMGUI_API=__declspec(dllexport);IMGUI_API=__declspec(dllexport);WIN32;_DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;DYNAREC;M64P_PARALLEL;NEW_DYNAREC=2;__x86_64__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
@@ -1041,8 +1050,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ARM64_New_Dynarec_Debug|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\src;..\..\subprojects\md5;..\..\subprojects\minizip;..\..\subprojects\oglft;..\..\subprojects\xxhash;..\..\..\mupen64plus-win32-deps\SDL2-2.26.3\include;..\..\..\mupen64plus-win32-deps\zlib-1.2.13\include;..\..\..\mupen64plus-win32-deps\libpng-1.6.39\include;..\..\..\mupen64plus-win32-deps\freetype-2.13.0\include;..\..\..\mupen64plus-win32-deps\opencv-3.0.0\include;..\..\..\mupen64plus-win32-deps\capstone\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;DYNAREC;M64P_PARALLEL;NEW_DYNAREC=2;__x86_64__;RECOMPILER_DEBUG=4;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\src;..\..\subprojects\md5;..\..\subprojects\minizip;..\..\subprojects\oglft;..\..\subprojects\xxhash;..\..\subprojects\ModLoader_ImGui;..\..\subprojects\ModLoader_ImGui\imgui;..\..\subprojects\ModLoader_ImGui\imgui\backends;..\..\..\mupen64plus-win32-deps\SDL2-2.26.3\include;..\..\..\mupen64plus-win32-deps\zlib-1.2.13\include;..\..\..\mupen64plus-win32-deps\libpng-1.6.39\include;..\..\..\mupen64plus-win32-deps\freetype-2.13.0\include;..\..\..\mupen64plus-win32-deps\opencv-3.0.0\include;..\..\..\mupen64plus-win32-deps\capstone\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>IMGUI_STATIC;CIMGUI_API=__declspec(dllexport);IMGUI_API=__declspec(dllexport);WIN32;_DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;DYNAREC;M64P_PARALLEL;NEW_DYNAREC=2;__x86_64__;RECOMPILER_DEBUG=4;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
@@ -1059,8 +1068,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='x64_New_Dynarec_Debug|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\src;..\..\subprojects\md5;..\..\subprojects\minizip;..\..\subprojects\oglft;..\..\subprojects\xxhash;..\..\..\mupen64plus-win32-deps\SDL2-2.26.3\include;..\..\..\mupen64plus-win32-deps\zlib-1.2.13\include;..\..\..\mupen64plus-win32-deps\libpng-1.6.39\include;..\..\..\mupen64plus-win32-deps\freetype-2.13.0\include;..\..\..\mupen64plus-win32-deps\opencv-3.0.0\include;..\..\..\mupen64plus-win32-deps\capstone\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;DYNAREC;M64P_PARALLEL;NEW_DYNAREC=2;__x86_64__;RECOMPILER_DEBUG=2;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\src;..\..\subprojects\md5;..\..\subprojects\minizip;..\..\subprojects\oglft;..\..\subprojects\xxhash;..\..\subprojects\ModLoader_ImGui;..\..\subprojects\ModLoader_ImGui\imgui;..\..\subprojects\ModLoader_ImGui\imgui\backends;..\..\..\mupen64plus-win32-deps\SDL2-2.26.3\include;..\..\..\mupen64plus-win32-deps\zlib-1.2.13\include;..\..\..\mupen64plus-win32-deps\libpng-1.6.39\include;..\..\..\mupen64plus-win32-deps\freetype-2.13.0\include;..\..\..\mupen64plus-win32-deps\opencv-3.0.0\include;..\..\..\mupen64plus-win32-deps\capstone\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>IMGUI_STATIC;CIMGUI_API=__declspec(dllexport);IMGUI_API=__declspec(dllexport);WIN32;_DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;DYNAREC;M64P_PARALLEL;NEW_DYNAREC=2;__x86_64__;RECOMPILER_DEBUG=2;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
@@ -1076,8 +1085,8 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\src;..\..\subprojects\md5;..\..\subprojects\minizip;..\..\subprojects\oglft;..\..\subprojects\xxhash;..\..\..\mupen64plus-win32-deps\SDL2-2.26.3\include;..\..\..\mupen64plus-win32-deps\zlib-1.2.13\include;..\..\..\mupen64plus-win32-deps\libpng-1.6.39\include;..\..\..\mupen64plus-win32-deps\freetype-2.13.0\include;..\..\..\mupen64plus-win32-deps\opencv-3.0.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;DYNAREC;M64P_PARALLEL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\src;..\..\subprojects\md5;..\..\subprojects\minizip;..\..\subprojects\oglft;..\..\subprojects\xxhash;..\..\subprojects\ModLoader_ImGui;..\..\subprojects\ModLoader_ImGui\imgui;..\..\subprojects\ModLoader_ImGui\imgui\backends;..\..\..\mupen64plus-win32-deps\SDL2-2.26.3\include;..\..\..\mupen64plus-win32-deps\zlib-1.2.13\include;..\..\..\mupen64plus-win32-deps\libpng-1.6.39\include;..\..\..\mupen64plus-win32-deps\freetype-2.13.0\include;..\..\..\mupen64plus-win32-deps\opencv-3.0.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>IMGUI_STATIC;CIMGUI_API=__declspec(dllexport);IMGUI_API=__declspec(dllexport);WIN32;NDEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;DYNAREC;M64P_PARALLEL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
@@ -1097,8 +1106,8 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\src;..\..\subprojects\md5;..\..\subprojects\minizip;..\..\subprojects\oglft;..\..\subprojects\xxhash;..\..\..\mupen64plus-win32-deps\SDL2-2.26.3\include;..\..\..\mupen64plus-win32-deps\zlib-1.2.13\include;..\..\..\mupen64plus-win32-deps\libpng-1.6.39\include;..\..\..\mupen64plus-win32-deps\freetype-2.13.0\include;..\..\..\mupen64plus-win32-deps\opencv-3.0.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;DYNAREC;M64P_PARALLEL;__x86_64__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\src;..\..\subprojects\md5;..\..\subprojects\minizip;..\..\subprojects\oglft;..\..\subprojects\xxhash;..\..\subprojects\ModLoader_ImGui;..\..\subprojects\ModLoader_ImGui\imgui;..\..\subprojects\ModLoader_ImGui\imgui\backends;..\..\..\mupen64plus-win32-deps\SDL2-2.26.3\include;..\..\..\mupen64plus-win32-deps\zlib-1.2.13\include;..\..\..\mupen64plus-win32-deps\libpng-1.6.39\include;..\..\..\mupen64plus-win32-deps\freetype-2.13.0\include;..\..\..\mupen64plus-win32-deps\opencv-3.0.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>IMGUI_STATIC;CIMGUI_API=__declspec(dllexport);IMGUI_API=__declspec(dllexport);WIN32;NDEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;DYNAREC;M64P_PARALLEL;__x86_64__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
@@ -1118,8 +1127,8 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='New_Dynarec_Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\src;..\..\subprojects\md5;..\..\subprojects\minizip;..\..\subprojects\oglft;..\..\subprojects\xxhash;..\..\..\mupen64plus-win32-deps\SDL2-2.26.3\include;..\..\..\mupen64plus-win32-deps\zlib-1.2.13\include;..\..\..\mupen64plus-win32-deps\libpng-1.6.39\include;..\..\..\mupen64plus-win32-deps\freetype-2.13.0\include;..\..\..\mupen64plus-win32-deps\opencv-3.0.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;DYNAREC;M64P_PARALLEL;NEW_DYNAREC=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\src;..\..\subprojects\md5;..\..\subprojects\minizip;..\..\subprojects\oglft;..\..\subprojects\xxhash;..\..\subprojects\ModLoader_ImGui;..\..\subprojects\ModLoader_ImGui\imgui;..\..\subprojects\ModLoader_ImGui\imgui\backends;..\..\..\mupen64plus-win32-deps\SDL2-2.26.3\include;..\..\..\mupen64plus-win32-deps\zlib-1.2.13\include;..\..\..\mupen64plus-win32-deps\libpng-1.6.39\include;..\..\..\mupen64plus-win32-deps\freetype-2.13.0\include;..\..\..\mupen64plus-win32-deps\opencv-3.0.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>IMGUI_STATIC;CIMGUI_API=__declspec(dllexport);IMGUI_API=__declspec(dllexport);WIN32;NDEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;DYNAREC;M64P_PARALLEL;NEW_DYNAREC=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
@@ -1139,8 +1148,8 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='New_Dynarec_Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\src;..\..\subprojects\md5;..\..\subprojects\minizip;..\..\subprojects\oglft;..\..\subprojects\xxhash;..\..\..\mupen64plus-win32-deps\SDL2-2.26.3\include;..\..\..\mupen64plus-win32-deps\zlib-1.2.13\include;..\..\..\mupen64plus-win32-deps\libpng-1.6.39\include;..\..\..\mupen64plus-win32-deps\freetype-2.13.0\include;..\..\..\mupen64plus-win32-deps\opencv-3.0.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;DYNAREC;M64P_PARALLEL;NEW_DYNAREC=2;__x86_64__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\src;..\..\subprojects\md5;..\..\subprojects\minizip;..\..\subprojects\oglft;..\..\subprojects\xxhash;..\..\subprojects\ModLoader_ImGui;..\..\subprojects\ModLoader_ImGui\imgui;..\..\subprojects\ModLoader_ImGui\imgui\backends;..\..\..\mupen64plus-win32-deps\SDL2-2.26.3\include;..\..\..\mupen64plus-win32-deps\zlib-1.2.13\include;..\..\..\mupen64plus-win32-deps\libpng-1.6.39\include;..\..\..\mupen64plus-win32-deps\freetype-2.13.0\include;..\..\..\mupen64plus-win32-deps\opencv-3.0.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>IMGUI_STATIC;CIMGUI_API=__declspec(dllexport);IMGUI_API=__declspec(dllexport);WIN32;NDEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;DYNAREC;M64P_PARALLEL;NEW_DYNAREC=2;__x86_64__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>

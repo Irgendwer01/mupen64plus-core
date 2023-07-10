@@ -423,6 +423,7 @@
     <ClCompile Include="..\..\src\device\r4300\new_dynarec\arm64\assem_arm64.c">
       <Filter>device\r4300\new_dynarec\arm64</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\device\r4300\cp2.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\api\callbacks.h">
@@ -779,6 +780,8 @@
     <ClInclude Include="..\..\src\api\modloader_common.h">
       <Filter>api</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\main\memory_base.h" />
+    <ClInclude Include="..\..\src\device\r4300\cp2.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\src\device\r4300\mips_instructions.def">
