@@ -2201,3 +2201,4 @@ m64p_error open_pif(const unsigned char* pifimage, unsigned int size)
     g_start_address = UINT32_C(0xbfc00000);
     return M64ERR_SUCCESS;
 }
+
