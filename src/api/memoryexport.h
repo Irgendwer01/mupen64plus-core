@@ -14,6 +14,7 @@ EXPORT void* CALL ROM_GetBaseAddress(void);
 EXPORT u32 CALL ROM_GetBaseSize(void);
 
 EXPORT void CALL InvalidateCachedCode(void);
+EXPORT void CALL InvalidateSpecificCachedCode(uint32_t address, uint32_t size);
 
 #ifdef __cplusplus
 }

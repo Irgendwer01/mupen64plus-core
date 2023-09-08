@@ -4,11 +4,11 @@
 #define RDRAM_MEMORY_4MB_SIZE   (0x00400000)
 #define RDRAM_MEMORY_8MB_SIZE   (0x00800000)
 #define RDRAM_MEMORY_16MB_SIZE  (0x01000000)
-#define RDRAM_MEMORY_SIZE       (0x40000000)
+#define RDRAM_MEMORY_SIZE       (0x04000000) // 64 mb
 #define RDRAM_REGISTER_COUNT (10)
 #define RDRAM_REGISTER_COUNT (10)
 
-#define CART_ROM_MAX_SIZE (0x4000000)
+#define CART_ROM_MAX_SIZE (0x20000000) // 512 mb
 #define DD_ROM_MAX_SIZE (0x400000)
 
 #define SP_MEM_SIZE (0x2000)
@@ -22,7 +22,6 @@
 
 typedef struct {
     void* rdram;
-    void* rdram_extra;
     void* cartrom;
     void* rspmem;
     void* ddrom;

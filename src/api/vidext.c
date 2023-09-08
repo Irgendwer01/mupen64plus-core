@@ -147,6 +147,10 @@ EXPORT m64p_error CALL VidExt_InitWithRenderMode(m64p_render_mode RenderMode)
     SDL_SetHint(SDL_HINT_WINDOWS_DPI_AWARENESS, "permonitorv2");
 #endif
 
+#if SDL_VERSION_ATLEAST(2,0,18)
+    SDL_SetHint(SDL_HINT_IME_SHOW_UI, "1");
+#endif
+
     if (SDL_InitSubSystem(SDL_INIT_VIDEO) == -1)
     {
         DebugMessage(M64MSG_ERROR, "SDL video subsystem init failed: %s", SDL_GetError());

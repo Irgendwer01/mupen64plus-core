@@ -143,6 +143,10 @@ static size_t l_pak_type_idx[6];
 /* PRNG state - used for Mempaks ID generation */
 static struct xoshiro256pp_state l_mpk_idgen;
 
+bool g_imgui_show_demo_window = 1;
+SDL_Window* g_backup_current_window = NULL;
+SDL_GLContext g_backup_current_context = NULL;
+
 /*********************************************************************************************************
 * static functions
 */
@@ -919,7 +923,6 @@ m64p_error main_reset(int do_hard_reset)
 /*********************************************************************************************************
 * global functions, callbacks from the r4300 core or from other plugins
 */
-
 static void video_plugin_render_callback(int bScreenRedrawn)
 {
 #ifdef M64P_OSD
@@ -958,7 +961,9 @@ static void video_plugin_render_callback(int bScreenRedrawn)
     ImGuiBackend_ImplSDL2_NewFrame();
     ImGui_NewFrame();
 
-    ImGui_ShowDemoWindow(NULL);
+    if (g_imgui_show_demo_window) {
+        ImGui_ShowDemoWindow(&g_imgui_show_demo_window);
+    }
 
     if (gVICallback) {
         gVICallback();
@@ -968,13 +973,13 @@ static void video_plugin_render_callback(int bScreenRedrawn)
     ImGui_Render();
     ImGuiBackend_ImplOpenGL3_RenderDrawData(ImGui_GetDrawData());
 
+    g_backup_current_window = SDL_GL_GetCurrentWindow();
+    g_backup_current_context = SDL_GL_GetCurrentContext();
     if (io->ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
-        SDL_Window* backup_current_window = SDL_GL_GetCurrentWindow();
-        SDL_GLContext backup_current_context = SDL_GL_GetCurrentContext();
         ImGui_UpdatePlatformWindows();
         ImGui_RenderPlatformWindowsDefault();
-        SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
     }
+    SDL_GL_MakeCurrent(g_backup_current_window, g_backup_current_context);
 }
 
 void new_frame(void)

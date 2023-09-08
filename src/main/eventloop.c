@@ -105,6 +105,8 @@ static m64p_handle l_CoreEventsConfig = NULL;
 #define kbdGameshark "Kbd Mapping Gameshark"
 #define kbdSpeedtoggle "Kbd Mapping Speed Limiter Toggle"
 
+extern SDL_Window* g_backup_current_window;
+
 typedef enum {joyFullscreen,
               joyStop,
               joyPause,
@@ -310,17 +312,22 @@ static int MatchJoyCommand(const SDL_Event *event, eJoyCommand cmd)
 */
 static int SDLCALL event_sdl_filter(void *userdata, SDL_Event *event)
 {
+    u32 quit = 0;
 #ifndef NO_KEYBINDINGS
     int cmd, action;
 #endif /* NO_KEYBINDINGS */
 
     ImGuiBackend_ImplSDL2_ProcessEvent(event);
 
+    if (event->type == SDL_WINDOWEVENT && event->window.event == SDL_WINDOWEVENT_CLOSE && event->window.windowID == SDL_GetWindowID(g_backup_current_window)) {
+        quit = 1;
+    }
+
     switch(event->type)
     {
         // user clicked on window close button
         case SDL_QUIT:
-            main_stop();
+            quit = 1;
             break;
 
         case SDL_KEYDOWN:
@@ -431,6 +438,10 @@ static int SDLCALL event_sdl_filter(void *userdata, SDL_Event *event)
             break;
 #endif /* NO_KEYBINDINGS */
 
+    }
+
+    if (quit) {
+        main_stop();
     }
 
     return 1;  // add this event to SDL queue

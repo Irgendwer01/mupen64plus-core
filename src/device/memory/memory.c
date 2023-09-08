@@ -319,9 +319,6 @@ uint32_t* mem_base_u32(MemoryBase* mem_base, uint32_t address) {
     else if ((address & UINT32_C(0xffffe000)) == MM_RSP_MEM) {
         mem = (uint32_t*)((uint8_t*)mem_base->rspmem + (address - MM_RSP_MEM));
     }
-    else if (address >= MM_RDRAM_DRAM2) {
-        mem = (uint32_t*)((uint8_t*)mem_base->rdram + (address - MM_RDRAM_DRAM2 + MM_RDRAM_REGS));
-    }
     else {
         mem = NULL;
     }

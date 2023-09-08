@@ -10,7 +10,7 @@ EXPORT void* CALL Memory_GetBaseAddress(void) {
 }
 
 EXPORT void* CALL ROM_GetBaseAddress(void) {
-    return g_dev.cart.cart_rom.rom;
+    return g_mem_base.cartrom;
 }
 
 EXPORT u32 CALL ROM_GetBaseSize(void) {
@@ -24,4 +24,13 @@ EXPORT void CALL InvalidateCachedCode(void) {
     invalidate_r4300_cached_code(&g_dev.r4300, 0, 0);
 #endif
 }
+
+EXPORT void CALL InvalidateSpecificCachedCode(uint32_t address, uint32_t size) {
+#ifdef NEW_DYNAREC
+    invalidate_cached_code_new_dynarec(&g_dev.r4300, address, size);
+#else
+    invalidate_r4300_cached_code(&g_dev.r4300, address, size);
+#endif
+}
+
 
