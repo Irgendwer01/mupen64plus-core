@@ -253,4 +253,6 @@ void generic_jump_to(struct r4300_core* r4300, unsigned int address);
 
 void savestates_load_set_pc(struct r4300_core* r4300, uint32_t pc);
 
+void r4300_ml64_do_code_callbacks(struct r4300_core* r4300);
+
 #endif

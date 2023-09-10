@@ -758,5 +758,6 @@ void run_pure_interpreter(struct r4300_core* r4300)
      if (g_DebuggerActive) update_debugger(*r4300_pc(r4300));
 #endif
      InterpretOpcode(r4300);
+	 r4300_ml64_do_code_callbacks(r4300);
    }
 }

@@ -40,6 +40,8 @@
 #include <string.h>
 #include <time.h>
 
+#include "api/memoryexport.h"
+
 void init_r4300(struct r4300_core* r4300, struct memory* mem, struct mi_controller* mi, struct rdram* rdram, const struct interrupt_handler* interrupt_handlers,
     unsigned int emumode, unsigned int count_per_op, unsigned int count_per_op_denom_pot, int no_compiled_jump, int randomize_interrupt, uint32_t start_address)
 {
@@ -458,4 +460,15 @@ void savestates_load_set_pc(struct r4300_core* r4300, uint32_t pc)
 {
     generic_jump_to(r4300, pc);
     invalidate_r4300_cached_code(r4300, 0, 0);
+}
+
+void r4300_ml64_do_code_callbacks(struct r4300_core* r4300) {
+    ML64_CodeCallbackNode* node = g_ml64_codecallback_head;
+    while (node != NULL) {
+        InvalidateSpecificCachedCode(node->address, 8);
+        if (*r4300_pc(r4300) == node->address) {
+            node->pfn();
+        }
+        node = node->next;
+    }
 }
