@@ -46,6 +46,7 @@
 #include "rcp/si/si_controller.h"
 #include "rcp/vi/vi_controller.h"
 #include "rdram/rdram.h"
+#include "main/memory_base.h"
 
 struct audio_out_backend_interface;
 struct clock_backend_interface;
@@ -117,7 +118,7 @@ struct device
 /* Setup device "static" properties.  */
 void init_device(struct device* dev,
     /* memory */
-    void* base,
+    MemoryBase* base,
     /* r4300 */
     unsigned int emumode,
     unsigned int count_per_op,
