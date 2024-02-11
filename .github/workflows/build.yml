@@ -49,7 +49,10 @@ jobs:
           sudo ldconfig
       - name: Build and related stuff, backup binaries
         run: |
-          git submodule update --init
+          git submodules update --init
+          cd subprojects/ModLoader_ImGui
+          git submodules update --init
+          cd ../..
           if [[ ${{ matrix.bits }} -eq 32 ]]; then export PIC="1" CPU_TUNE="-msse2 -mtune=pentium4"; else CPU_TUNE="-mtune=core2"; fi
           export OPTFLAGS="-O2 -flto ${CPU_TUNE}"
           ORIG="$(pwd)"
@@ -129,7 +132,10 @@ jobs:
             mingw-w64-${{ matrix.cross }}-zlib
       - name: Build and related stuff, backup binaries
         run: |
-          git submodule update --init
+          git submodules update --init
+          cd subprojects/ModLoader_ImGui
+          git submodules update --init
+          cd ../..
           echo "G_REV=$(git rev-parse --short HEAD)" >> "${GITHUB_ENV}"
           if [[ ${{ matrix.bits }} -eq 32 ]]; then CPU_TUNE="-msse2 -mtune=pentium4"; else CPU_TUNE="-mtune=core2"; fi
           export OPTFLAGS="-O2 -flto ${CPU_TUNE}"
@@ -190,7 +196,10 @@ jobs:
       - uses: microsoft/setup-msbuild@v1
       - name: Build and related stuff, backup binaries
         run: |
-          git submodule update --init
+          git submodules update --init
+          cd subprojects/ModLoader_ImGui
+          git submodules update --init
+          cd ../..
           for /f "tokens=1" %%R in ('git rev-parse --short HEAD') do echo G_REV=%%R>> "%GITHUB_ENV%"
           set "ARCH=${{ matrix.platform }}"
           if [%ARCH%] == [x86] set "ARCH=Win32"
