@@ -44,11 +44,12 @@ jobs:
           echo "G_REV=$(git rev-parse --short HEAD)" >> "${GITHUB_ENV}"
           if [[ ${{ matrix.bits }} -eq 32 ]]; then sudo dpkg --add-architecture i386; fi
           sudo apt-get update
-          sudo apt-get -y install libfreetype6-dev libgl1-mesa-dev libglu1-mesa-dev libpng-dev libsdl1.2-dev libsdl2-dev libvulkan-dev nasm zlib1g-dev
-          if [[ ${{ matrix.bits }} -eq 32 ]]; then sudo apt-get --reinstall -y install gcc-multilib g++-multilib libc6 libc6-dev-i386 libatomic1:i386 libgcc-s1:i386 libstdc++6:i386 libfreetype6-dev:i386 libgl1-mesa-dev:i386 libglu1-mesa-dev:i386 libpng-dev:i386 libsdl1.2-dev:i386 libsdl2-dev:i386 libvulkan-dev:i386 zlib1g-dev:i386; fi
+          sudo apt-get -y install libfreetype6-dev libgl1-mesa-dev libglu1-mesa-dev libpng-dev libsdl1.2-dev libsdl2-dev libvulkan-dev nasm zlib1g-dev git
+          if [[ ${{ matrix.bits }} -eq 32 ]]; then sudo apt-get --reinstall -y install gcc-multilib g++-multilib libc6 libc6-dev-i386 libatomic1:i386 libgcc-s1:i386 libstdc++6:i386 libfreetype6-dev:i386 libgl1-mesa-dev:i386 libglu1-mesa-dev:i386 libpng-dev:i386 libsdl1.2-dev:i386 libsdl2-dev:i386 libvulkan-dev:i386 zlib1g-dev:i386 git; fi
           sudo ldconfig
       - name: Build and related stuff, backup binaries
         run: |
+          git submodule update --init
           if [[ ${{ matrix.bits }} -eq 32 ]]; then export PIC="1" CPU_TUNE="-msse2 -mtune=pentium4"; else CPU_TUNE="-mtune=core2"; fi
           export OPTFLAGS="-O2 -flto ${CPU_TUNE}"
           ORIG="$(pwd)"
@@ -128,6 +129,7 @@ jobs:
             mingw-w64-${{ matrix.cross }}-zlib
       - name: Build and related stuff, backup binaries
         run: |
+          git submodule update --init
           echo "G_REV=$(git rev-parse --short HEAD)" >> "${GITHUB_ENV}"
           if [[ ${{ matrix.bits }} -eq 32 ]]; then CPU_TUNE="-msse2 -mtune=pentium4"; else CPU_TUNE="-mtune=core2"; fi
           export OPTFLAGS="-O2 -flto ${CPU_TUNE}"
@@ -188,6 +190,7 @@ jobs:
       - uses: microsoft/setup-msbuild@v1
       - name: Build and related stuff, backup binaries
         run: |
+          git submodule update --init
           for /f "tokens=1" %%R in ('git rev-parse --short HEAD') do echo G_REV=%%R>> "%GITHUB_ENV%"
           set "ARCH=${{ matrix.platform }}"
           if [%ARCH%] == [x86] set "ARCH=Win32"
