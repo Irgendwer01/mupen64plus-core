@@ -616,8 +616,10 @@ CFLAGS += -I$(SUBDIR)/md5
 # xxhash
 CFLAGS += -I$(SUBDIR)/xxhash
 
-#ImGUI
+#ImGui
 CFLAGS += -I$(SUBDIR)/ModLoader_ImGui
+CFLAGS += -I$(SUBDIR)/ModLoader_ImGui/imgui
+CFLAGS += -I$(SUBDIR)/ModLoader_ImGui/dear_bindings
 
 ifeq ("$(OS)","MINGW")
 SOURCE += \
